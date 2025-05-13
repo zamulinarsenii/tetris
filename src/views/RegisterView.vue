@@ -43,6 +43,7 @@
                 :rules="confirmPasswordRules"
                 required
               ></v-text-field>
+              <p v-if="error" class="error-text">{{ error }}</p>
             </v-card-text>
 
             <v-btn type="submit" class="gradient top-to-bottom w-50"
@@ -59,18 +60,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-
-onMounted(() => {
-  document.querySelectorAll("input").forEach((input) => {
-    input.autocomplete = "off";
-    input.setAttribute("readonly", "readonly");
-    setTimeout(() => input.removeAttribute("readonly"), 100);
-  });
-});
+import { useAuth } from "@/js/useAuth.js";
 
 const router = useRouter();
+const { register, error } = useAuth();
+
 const login = ref("");
 const email = ref("");
 const password = ref("");
@@ -96,12 +92,12 @@ const confirmPasswordRules = computed(() => [
   (v) => v === password.value || "Пароли не совпадают",
 ]);
 
-const submitRegister = () => {
-  // Сохраняем данные перед переходом
-  sessionStorage.setItem("tempLogin", login.value);
-  sessionStorage.setItem("tempPassword", password.value);
-
-  // Переходим на страницу входа
-  router.push("/login");
+const submitRegister = async () => {
+  const ok = await register(login.value, email.value, password.value);
+  if (ok) {
+    // После успешной регистрации сразу переходим в дашборд
+    sessionStorage.setItem("tetrisUser", login.value);
+    router.push("/menu");
+  }
 };
 </script>

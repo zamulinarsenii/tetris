@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
+import Dashboard from "../views/DashboardView.vue";
+import Main from "../views/MainView.vue";
+import NewGame from "../views/NewGameView.vue";
+import Tetris from "../views/TetrisView.vue";
+import ProfileView from "../views/ProfileView.vue";
 
 const routes = [
   {
@@ -19,9 +24,28 @@ const routes = [
   },
   {
     path: "/dashboard",
-    name: "Dashboard",
-    component: () => import("../views/DashboardView.vue"),
-    meta: { requiresAuth: true }, // Для защиты маршрута
+    name: "dashboard",
+    component: Dashboard,
+  },
+  {
+    path: "/menu",
+    name: "menu",
+    component: Main,
+  },
+  {
+    path: "/game",
+    name: "game",
+    component: NewGame,
+  },
+  {
+    path: "/tetris",
+    name: "tetris",
+    component: Tetris,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: ProfileView,
   },
 ];
 

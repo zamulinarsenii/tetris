@@ -1,49 +1,36 @@
 <template>
   <v-app>
     <!-- Шапка -->
-    <v-app-bar color="primary" dense dark>
+    <v-app-bar class="pt-2 pb-2 pr-8 pl-8">
       <!-- Логотип или название приложения -->
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Мое Приложение</v-toolbar-title>
+      <v-img
+        class="logo"
+        src="@/assets/logo.svg"
+        alt="Мой логотип"
+        max-height="40"
+      />
 
-      <v-spacer></v-spacer>
+      <!-- Навигация -->
+      <v-btn text to="/new-game" class="text-h5">НОВАЯ ИГРА</v-btn>
+      <v-btn text to="/controls" class="text-h5">УПРАВЛЕНИЕ</v-btn>
+      <v-btn text to="/leaderboard" class="text-h5">ТАБЛИЦА ЛИДЕРОВ</v-btn>
 
-      <!-- Иконка пользователя и меню -->
-      <v-menu offset-y>
-        <template v-slot:activator="{ props }">
-          <v-btn icon v-bind="props">
-            <v-avatar size="36">
-              <v-icon>mdi-account-circle</v-icon>
-            </v-avatar>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item>
-            <v-list-item-title>{{ userName }}</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="goToProfile">
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Профиль</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="logout">
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Выход</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-spacer />
+      <router-link
+        to="/profile"
+        class="d-flex align-center user-info ga-4"
+        style="text-decoration: none"
+      >
+        <v-avatar size="30" class="gradient">
+          {{ initials }}
+        </v-avatar>
+        <span class="user-name mr-4">{{ currentUser }}</span>
+      </router-link>
     </v-app-bar>
 
     <!-- Основной контент -->
     <v-main>
       <v-container>
-        <h1 class="text-h4 mb-6">Добро пожаловать, {{ userName }}!</h1>
-
         <!-- Пример контента -->
         <v-row>
           <v-col cols="12" md="6">
@@ -70,27 +57,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const drawer = ref(false);
-
-// Получаем данные пользователя (замените на реальные данные)
-const userName = ref("Иван Иванов");
-
-const goToProfile = () => {
-  router.push("/profile");
-};
-
-const logout = () => {
-  // Здесь должна быть логика выхода
-  console.log("Logout");
+const currentUser = sessionStorage.getItem("tetrisUser");
+if (!currentUser) {
   router.push("/login");
-};
+}
 </script>
 
 <style scoped>
+::v-deep .logo .v-img__img,
+::v-deep .logo .v-img__picture {
+  width: auto !important;
+}
 .v-avatar {
   cursor: pointer;
   transition: transform 0.3s ease;

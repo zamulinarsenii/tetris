@@ -1,21 +1,35 @@
 <template>
-  <v-app>
+  <v-app class="app-background">
+    <TetrisHeader v-if="showHeader"></TetrisHeader>
     <v-main>
       <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
-<script>
-export default {
-  name: "App",
-};
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import TetrisHeader from "@/components/TetrisHeader.vue";
+
+const route = useRoute();
+
+// Список имён маршрутов, на которых шапку НЕ показываем
+const noHeader = ["login", "register"];
+const showHeader = computed(() => !noHeader.includes(route.name));
+
+if (showHeader.value && !sessionStorage.getItem("tetrisUser")) {
+  route.push("/login");
+}
 </script>
 
 <style>
+.app-background {
+  background-color: #d9d9d9 !important;
+}
 .gradient {
   color: white !important;
-  border: 2px solid white;
+  background: linear-gradient(90deg, #f52285, #fabdd9) !important;
 }
 .gradient.left-to-right {
   background: linear-gradient(90deg, #f52285, #fabdd9) !important;
