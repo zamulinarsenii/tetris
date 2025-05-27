@@ -17,6 +17,9 @@
     <v-btn text to="/leaderboard" class="text-h5 font-weight-bold"
       >ТАБЛИЦА ЛИДЕРОВ</v-btn
     >
+    <v-btn text to="/aboutus" class="text-h5 font-weight-bold"
+      >ОБ АВТОРАХ</v-btn
+    >
 
     <v-spacer />
 

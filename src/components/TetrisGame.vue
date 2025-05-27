@@ -1,11 +1,27 @@
 <template>
   <div class="d-flex ga-2 w-100 justify-center container">
     <canvas ref="canvas" :width="glass[0]" :height="glass[1]"></canvas>
+    <div class="grid-tetris" :width="glass[0]" :height="glass[1]">
+      <div
+        v-for="n in (glass[0] * glass[1]) / glass[2] ** 2"
+        :key="n"
+        :width="glass[2]"
+        :height="glass[2]"
+      ></div>
+    </div>
     <div class="d-flex align-center flex-column stats text-h6">
       <span> Счёт: </span>
       <span>{{ score }}</span>
       <div class="preview-container mt-4">
-        <canvas ref="previewCanvas" width="100" height="100"></canvas>
+        <canvas ref="previewCanvas" width="150" height="150"></canvas>
+        <div class="grid-preview" :width="glass[0]" :height="glass[1]">
+          <div
+            v-for="n in 25"
+            :key="n"
+            :width="glass[2]"
+            :height="glass[2]"
+          ></div>
+        </div>
       </div>
     </div>
   </div>
@@ -18,15 +34,24 @@ const score = ref(0);
 const canvas = ref(null);
 const previewCanvas = ref(null); // Добавляем реф для превью
 const colors = ["red", "purple", "blue", "green", "yellow", "orange", "pink"];
+
 const glass = [360, 600, 30];
 const cell = [glass[0] / glass[2], glass[1] / glass[2]];
+const dropIntervals = {
+  // Скорость падения фигур 2 кл/с - 10кл/с
+  lvl1: 500,
+  lvl2: 400,
+  lvl3: 300,
+  lvl4: 200,
+  lvl5: 100,
+};
 let context,
   previewContext, // Контекст для превью
   arena,
   player,
   nextPiece = null, // Храним следующую фигуру
   dropCounter = 0,
-  dropInterval = 500,
+  dropInterval = dropIntervals.lvl1, // Скорость падения фигур
   lastTime = 0;
 
 function arenaSweep() {
@@ -43,6 +68,18 @@ function arenaSweep() {
   // Начисляем очки за очищенные линии
   if (rowCount > 0) {
     score.value += rowCount * 100;
+    // Сохранение очков
+    sessionStorage.setItem("tetris-user-score", score.value);
+    // Изменение уровня по очкам
+    if (score.value >= 1000 && score.value <= 2000) {
+      dropInterval = dropIntervals.lvl2;
+    } else if (score.value >= 2000 && score.value <= 3000) {
+      dropInterval = dropIntervals.lvl3;
+    } else if (score.value >= 3000 && score.value <= 4000) {
+      dropInterval = dropIntervals.lvl4;
+    } else if (score.value >= 5000) {
+      dropInterval = dropIntervals.lvl5;
+    }
   }
 }
 
@@ -63,48 +100,65 @@ function createMatrix(w, h) {
 }
 
 function createPiece(type) {
-  let r = Math.floor(Math.random() * colors.length);
+  let r = Math.floor(Math.random() * colors.length - 1);
+  if (r <= 0) {
+    r = 1;
+  }
   if (type === "T")
     return [
-      [0, r, 0],
-      [r, r, r],
-      [0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, r, 0, 0],
+      [0, r, r, r, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "O")
     return [
-      [r, r],
-      [r, r],
+      [0, 0, 0, 0, 0],
+      [0, r, r, 0, 0],
+      [0, r, r, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "L")
     return [
-      [0, 0, r],
-      [r, r, r],
-      [0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, r, 0],
+      [0, r, r, r, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "J")
     return [
-      [r, 0, 0],
-      [r, r, r],
-      [0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, r, 0, 0, 0],
+      [0, r, r, r, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "I")
     return [
-      [0, 0, 0, 0],
-      [r, r, r, r],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [r, r, r, r, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "S")
     return [
-      [0, r, r],
-      [r, r, 0],
-      [0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, r, r, 0],
+      [0, r, r, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
   if (type === "Z")
     return [
-      [r, r, 0],
-      [0, r, r],
-      [0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, r, r, 0, 0],
+      [0, 0, r, r, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
 }
 
@@ -153,7 +207,6 @@ function playerReset() {
   if (!nextPiece) {
     nextPiece = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
   }
-
   // Берем текущую фигуру из следующей
   player.matrix = nextPiece;
   // Генерируем новую следующую фигуру
@@ -230,7 +283,7 @@ onMounted(() => {
 
   // Контекст превью
   previewContext = previewCanvas.value.getContext("2d");
-  previewContext.scale(20, 20); // Масштаб для превью
+  previewContext.scale(glass[2], glass[2]); // Масштаб для превью
 
   arena = createMatrix(cell[0], cell[1]);
   player = { pos: { x: 0, y: 0 }, matrix: null };
@@ -250,20 +303,53 @@ onMounted(() => {
 <style scoped>
 .container {
   position: relative;
-  left: 75px;
+  left: 100px;
 }
+
 .stats {
+  position: relative;
   background: #fff;
   padding: 10px;
-  width: 150px;
+  width: 200px;
   height: fit-content;
   border-radius: 5px;
 }
+
 canvas {
-  border: 1px solid #000;
-  border-radius: 5px;
+  position: relative;
 }
-.stats div {
-  margin: 5px 0;
+
+.grid-tetris {
+  position: absolute;
+  display: grid;
+  width: 360px;
+  left: 150px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  box-shadow: 0 0 2px black;
+}
+
+.grid-preview {
+  position: absolute;
+  display: grid;
+  margin: 0 !important;
+  bottom: 20px;
+  width: 150px;
+  height: 150px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  box-shadow: 0 0 2px black;
+}
+
+.grid-tetris div {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #c1c1c1;
+}
+
+.grid-preview div {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #c1c1c1;
 }
 </style>

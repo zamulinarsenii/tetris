@@ -9,17 +9,18 @@
 
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import TetrisHeader from "@/components/TetrisHeader.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 // Список имён маршрутов, на которых шапку НЕ показываем
 const noHeader = ["login", "register"];
 const showHeader = computed(() => !noHeader.includes(route.name));
 
 if (showHeader.value && !sessionStorage.getItem("tetrisUser")) {
-  route.push("/login");
+  router.push("/login");
 }
 </script>
 

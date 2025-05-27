@@ -6,6 +6,8 @@ import Main from "../views/MainView.vue";
 import NewGame from "../views/NewGameView.vue";
 import Tetris from "../views/TetrisView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import AboutUsView from "../views/AboutUsView.vue";
+import ControlsView from "../views/ControlsView.vue";
 
 const routes = [
   {
@@ -46,6 +48,16 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: ProfileView,
+  },
+  {
+    path: "/aboutus",
+    name: "aboutus",
+    component: AboutUsView,
+  },
+  {
+    path: "/controls",
+    name: "controls",
+    component: ControlsView,
   },
 ];
 
