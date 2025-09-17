@@ -1,6 +1,5 @@
 <script setup>
-import { computed } from "vue";
-import { useDeleteFigures } from "@/api/figures.js";
+import { ref, computed } from "vue";
 const props = defineProps({
   figure: {
     type: Object,
@@ -19,23 +18,28 @@ const cells = computed(() => {
   const normalized = (raw + "0".repeat(COLS * ROWS)).slice(0, COLS * ROWS);
   return normalized.split("").map((ch) => (ch === "1" ? 1 : 0));
 });
-
-const deleteFigure = async () => {
-  console.log("Удаление фигуры:", props.figure.id);
-  await useDeleteFigures(props.figure.id);
-  window.location.reload();
+const add = ref(false);
+const emit = defineEmits(["add", "remove"]);
+const addFigure = () => {
+  if (!add.value) {
+    emit("add", props.figure.id);
+  } else {
+    emit("remove", props.figure.id);
+  }
 };
 </script>
 
 <template>
   <div class="figure-editor">
-    <div>
-      <img
-        :src="require('@/assets/trash.svg')"
-        alt="Удалить"
-        @click="deleteFigure"
-      />
-    </div>
+    <label @click="addFigure"
+      >Добавить
+      <input
+        type="checkbox"
+        v-model="add"
+        label="Добавить"
+        color="primary"
+        aria-label="Добавить"
+    /></label>
     <div class="preview-container">
       <!-- Превью сетки -->
       <div
@@ -63,7 +67,6 @@ const deleteFigure = async () => {
 .figure-editor {
   display: flex;
   flex-direction: column;
-  align-items: end;
   gap: 5px;
 }
 .figure-editor img {

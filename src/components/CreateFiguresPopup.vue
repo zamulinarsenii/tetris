@@ -44,6 +44,7 @@ function saveFigure() {
   const pattern = cells.value.join(""); // "0100010..."
   usePostFigures(pattern);
   emit("close"); // закрываем попап
+  window.location.reload();
 }
 
 function closePopup() {
@@ -66,8 +67,7 @@ function closePopup() {
 }
 
 .create-figure__container {
-  width: 400px;
-  height: 450px;
+  height: fit-content;
   position: relative;
   background-color: white;
   display: flex;

@@ -25,13 +25,13 @@ import CreateFiguresPopup from "@/components/CreateFiguresPopup.vue";
 
 const showPopup = ref(false);
 const figures = ref([]);
-// В методе или хуке
+
 async function loadFigures() {
   try {
     figures.value = await useGetFigures();
-    console.log("Figures loaded:", figures.value);
+    console.log("Загруженные фигуры:", figures.value);
   } catch (error) {
-    console.error("Error loading figures:", error);
+    console.error("Ошибка при загрузке фигур:", error);
   }
 }
 loadFigures();
@@ -50,8 +50,9 @@ loadFigures();
 }
 .container-figures {
   display: flex;
+  padding: 0 20px;
   width: 100%;
-  justify-content: center;
+  overflow-x: scroll;
   gap: 20px;
   width: 100%;
 }

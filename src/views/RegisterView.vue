@@ -43,9 +43,7 @@
                 :rules="confirmPasswordRules"
                 required
               />
-              <p v-if="error" class="error-text">
-                {{ error }}
-              </p>
+              <p v-if="error" class="error-text">{{ error }}</p>
             </v-card-text>
 
             <v-btn type="submit" class="gradient top-to-bottom w-50">
@@ -63,8 +61,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
 import { useRegisterApi } from "@/api/user.js";
+import { useRouter } from "vue-router";
+
 const router = useRouter();
 
 const login = ref("");
@@ -72,8 +71,6 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const error = ref("");
-const successMessage = ref("");
-const loading = ref(false);
 
 const loginRules = [
   (v) => !!v || "Login обязательно",
@@ -111,9 +108,16 @@ const submitRegister = async () => {
     error.value = "Пароли не совпадают";
     return;
   }
-  useRegisterApi(login.value, email.value, password.value);
-  setTimeout(() => {
-    router.push("/menu");
-  }, 1000);
+  try {
+    const res = await useRegisterApi(login.value, password.value, email.value);
+    console.log("ответ регистрации:", res);
+    if (res.ok) {
+      sessionStorage.setItem("tetrisUser", login.value);
+      sessionStorage.setItem("tetrisUserId", res.id);
+      router.push("/menu");
+    } else error.value = "Этот логин уже используется";
+  } catch (err) {
+    error.value = err.message || "Ошибка регистрации";
+  }
 };
 </script>

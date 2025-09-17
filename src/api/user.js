@@ -1,50 +1,30 @@
 import { apiName } from "@/api/apiName.js";
 
-export async function useRegisterApi(login, password, email) {
-  try {
-    const response = await fetch(`${apiName}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        login: login,
-        password: password,
-        email: email,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Registration failed");
-    }
-    const data = await response.json();
-    console.log("Registration successful:", data);
-    return data;
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
+export const useRegisterApi = async (login, password, email) => {
+  const response = await fetch(`${apiName}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ login, password, email }),
+  });
+  if (!response.ok) {
+    return;
   }
-}
 
-export async function useLoginApi(login, password) {
-  try {
-    const response = await fetch(`${apiName}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        login: login,
-        password: password,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Registration failed");
-    }
-    const data = await response.json();
-    console.log("Registration successful:", data);
-    return data;
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
+  const data = await response.json();
+  return data;
+};
+
+export const useLoginApi = async (login, password) => {
+  const response = await fetch(`${apiName}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ login, password }),
+  });
+
+  if (!response.ok) {
+    return;
   }
-}
+
+  const data = await response.json();
+  return data;
+};

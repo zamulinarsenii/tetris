@@ -1,42 +1,24 @@
 <template>
   <div class="d-flex ga-2 w-100 justify-center container">
-    <canvas
-      ref="canvas"
-      :width="glass[0]"
-      :height="glass[1]"
-    />
-    <div
-      class="grid-tetris"
-      :width="glass[0]"
-      :height="glass[1]"
-    >
-      <div
-        v-for="n in (glass[0] * glass[1]) / glass[2] ** 2"
-        :key="n"
-        :width="glass[2]"
-        :height="glass[2]"
-      />
+    <div class="container-tetris">
+      <canvas ref="canvas" :width="glass[0]" :height="glass[1]" />
+      <div class="grid-tetris" :width="glass[0]" :height="glass[1]">
+        <div
+          v-for="n in (glass[0] * glass[1]) / glass[2] ** 2"
+          :key="n"
+          :width="glass[2]"
+          :height="glass[2]"
+        />
+      </div>
     </div>
+
     <div class="d-flex align-center flex-column stats text-h6">
       <span> Счёт: </span>
       <span>{{ score }}</span>
       <div class="preview-container mt-4">
-        <canvas
-          ref="previewCanvas"
-          width="150"
-          height="150"
-        />
-        <div
-          class="grid-preview"
-          :width="glass[0]"
-          :height="glass[1]"
-        >
-          <div
-            v-for="n in 25"
-            :key="n"
-            :width="glass[2]"
-            :height="glass[2]"
-          />
+        <canvas ref="previewCanvas" width="150" height="150" />
+        <div class="grid-preview" :width="glass[0]" :height="glass[1]">
+          <div v-for="n in 25" :key="n" :width="glass[2]" :height="glass[2]" />
         </div>
       </div>
     </div>
@@ -330,7 +312,9 @@ onMounted(() => {
   height: fit-content;
   border-radius: 5px;
 }
-
+.container-tetris {
+  position: relative;
+}
 canvas {
   position: relative;
 }
@@ -339,10 +323,11 @@ canvas {
   position: absolute;
   display: grid;
   width: 360px;
-  left: 150px;
+  left: 0px;
+  top: 0;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: auto;
-  box-shadow: 0 0 2px black;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .grid-preview {
@@ -354,18 +339,18 @@ canvas {
   height: 150px;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
-  box-shadow: 0 0 2px black;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .grid-tetris div {
   width: 30px;
   height: 30px;
-  border: 1px solid #c1c1c1;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .grid-preview div {
   width: 30px;
   height: 30px;
-  border: 1px solid #c1c1c1;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 </style>
