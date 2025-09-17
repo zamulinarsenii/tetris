@@ -1,26 +1,42 @@
 <template>
   <div class="d-flex ga-2 w-100 justify-center container">
-    <canvas ref="canvas" :width="glass[0]" :height="glass[1]"></canvas>
-    <div class="grid-tetris" :width="glass[0]" :height="glass[1]">
+    <canvas
+      ref="canvas"
+      :width="glass[0]"
+      :height="glass[1]"
+    />
+    <div
+      class="grid-tetris"
+      :width="glass[0]"
+      :height="glass[1]"
+    >
       <div
         v-for="n in (glass[0] * glass[1]) / glass[2] ** 2"
         :key="n"
         :width="glass[2]"
         :height="glass[2]"
-      ></div>
+      />
     </div>
     <div class="d-flex align-center flex-column stats text-h6">
       <span> Счёт: </span>
       <span>{{ score }}</span>
       <div class="preview-container mt-4">
-        <canvas ref="previewCanvas" width="150" height="150"></canvas>
-        <div class="grid-preview" :width="glass[0]" :height="glass[1]">
+        <canvas
+          ref="previewCanvas"
+          width="150"
+          height="150"
+        />
+        <div
+          class="grid-preview"
+          :width="glass[0]"
+          :height="glass[1]"
+        >
           <div
             v-for="n in 25"
             :key="n"
             :width="glass[2]"
             :height="glass[2]"
-          ></div>
+          />
         </div>
       </div>
     </div>

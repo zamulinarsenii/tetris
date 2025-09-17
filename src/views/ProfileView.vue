@@ -1,7 +1,11 @@
 <template>
   <v-container class="mt-6">
     <v-row justify="center">
-      <v-col cols="12" md="8" lg="6">
+      <v-col
+        cols="12"
+        md="8"
+        lg="6"
+      >
         <v-card>
           <v-card-title> Профиль пользователя </v-card-title>
           <v-card-text>
@@ -19,20 +23,16 @@
                   <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Дата регистрации</v-list-item-title>
-                  <v-list-item-subtitle>{{
-                    user.registeredAt
-                  }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
               <!-- любая другая информация -->
             </v-list>
           </v-card-text>
           <v-card-actions>
-            <v-btn text to="/menu">На главную</v-btn>
+            <v-btn
+              text
+              to="/menu"
+            >
+              На главную
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

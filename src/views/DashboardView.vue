@@ -11,9 +11,27 @@
       />
 
       <!-- Навигация -->
-      <v-btn text to="/new-game" class="text-h5">НОВАЯ ИГРА</v-btn>
-      <v-btn text to="/controls" class="text-h5">УПРАВЛЕНИЕ</v-btn>
-      <v-btn text to="/leaderboard" class="text-h5">ТАБЛИЦА ЛИДЕРОВ</v-btn>
+      <v-btn
+        text
+        to="/new-game"
+        class="text-h5"
+      >
+        НОВАЯ ИГРА
+      </v-btn>
+      <v-btn
+        text
+        to="/controls"
+        class="text-h5"
+      >
+        УПРАВЛЕНИЕ
+      </v-btn>
+      <v-btn
+        text
+        to="/leaderboard"
+        class="text-h5"
+      >
+        ТАБЛИЦА ЛИДЕРОВ
+      </v-btn>
 
       <v-spacer />
       <router-link
@@ -21,7 +39,10 @@
         class="d-flex align-center user-info ga-4"
         style="text-decoration: none"
       >
-        <v-avatar size="30" class="gradient">
+        <v-avatar
+          size="30"
+          class="gradient"
+        >
           {{ initials }}
         </v-avatar>
         <span class="user-name mr-4">{{ currentUser }}</span>
@@ -33,7 +54,10 @@
       <v-container>
         <!-- Пример контента -->
         <v-row>
-          <v-col cols="12" md="6">
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-card class="pa-4">
               <v-card-title>Моя статистика</v-card-title>
               <v-card-text>
@@ -42,7 +66,10 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12" md="6">
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-card class="pa-4">
               <v-card-title>Последние действия</v-card-title>
               <v-card-text>

@@ -1,16 +1,24 @@
 <template>
-  <v-container class="fill-height" fluid>
+  <v-container
+    class="fill-height"
+    fluid
+  >
     <v-row justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
+      <v-col
+        cols="12"
+        sm="8"
+        md="6"
+        lg="4"
+      >
         <v-card class="elevation-12">
           <v-toolbar class="gradient left-to-right">
             <v-toolbar-title>Вход</v-toolbar-title>
           </v-toolbar>
 
           <v-form
-            @submit.prevent="submitLogin"
             class="d-flex flex-column align-center"
             autocomplete="off"
+            @submit.prevent="submitLogin"
           >
             <v-card-text class="w-100">
               <v-text-field
@@ -19,7 +27,7 @@
                 type="email"
                 :rules="loginRules"
                 required
-              ></v-text-field>
+              />
 
               <v-text-field
                 v-model="password"
@@ -27,15 +35,26 @@
                 type="password"
                 :rules="passwordRules"
                 required
-              ></v-text-field>
-              <p v-if="error" class="error-text">{{ error }}</p>
+              />
+              <p
+                v-if="error"
+                class="error-text"
+              >
+                {{ error }}
+              </p>
             </v-card-text>
-            <v-btn type="submit" class="gradient top-to-bottom w-25"
-              >Войти</v-btn
+            <v-btn
+              type="submit"
+              class="gradient top-to-bottom w-25"
             >
-            <router-link class="mt-5 mb-2 mr-3 align-self-end" to="/register"
-              >Нет аккаунта?</router-link
+              Войти
+            </v-btn>
+            <router-link
+              class="mt-5 mb-2 mr-3 align-self-end"
+              to="/register"
             >
+              Нет аккаунта?
+            </router-link>
           </v-form>
         </v-card>
       </v-col>

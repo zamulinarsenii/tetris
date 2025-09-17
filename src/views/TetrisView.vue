@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <h1 class="text-center">Тетрис</h1>
+    <h1 class="text-center">
+      Тетрис
+    </h1>
     <TetrisGame />
   </v-container>
 </template>

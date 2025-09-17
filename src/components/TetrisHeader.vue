@@ -10,16 +10,41 @@
       @click="$router.push('/menu')"
     />
 
-    <v-btn text to="/game" class="text-h5 font-weight-bold">ИГРА</v-btn>
-    <v-btn text to="/controls" class="text-h5 font-weight-bold"
-      >УПРАВЛЕНИЕ</v-btn
+    <v-btn
+      text
+      to="/game"
+      class="text-h5 font-weight-bold"
     >
-    <v-btn text to="/leaderboard" class="text-h5 font-weight-bold"
-      >ТАБЛИЦА ЛИДЕРОВ</v-btn
+      ИГРА
+    </v-btn>
+    <v-btn
+      text
+      to="/controls"
+      class="text-h5 font-weight-bold"
     >
-    <v-btn text to="/aboutus" class="text-h5 font-weight-bold"
-      >ОБ АВТОРАХ</v-btn
+      УПРАВЛЕНИЕ
+    </v-btn>
+    <v-btn
+      text
+      to="/leaderboard"
+      class="text-h5 font-weight-bold"
     >
+      ТАБЛИЦА ЛИДЕРОВ
+    </v-btn>
+    <v-btn
+      text
+      to="/aboutus"
+      class="text-h5 font-weight-bold"
+    >
+      ОБ АВТОРАХ
+    </v-btn>
+    <v-btn
+      text
+      to="/admin"
+      class="text-h5 font-weight-bold"
+    >
+      admin
+    </v-btn>
 
     <v-spacer />
 
@@ -28,7 +53,10 @@
       class="d-flex align-center user-info ga-4"
       style="text-decoration: none"
     >
-      <v-avatar size="30" class="gradient">
+      <v-avatar
+        size="30"
+        class="gradient"
+      >
         {{ initials }}
       </v-avatar>
       <span class="user-name mr-4">{{ currentUser }}</span>

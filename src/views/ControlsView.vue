@@ -17,7 +17,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn text to="/menu">На главную</v-btn>
+        <v-btn text to="/menu"> На главную </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

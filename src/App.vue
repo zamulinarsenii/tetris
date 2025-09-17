@@ -1,8 +1,8 @@
 <template>
   <v-app class="app-background">
-    <TetrisHeader v-if="showHeader"></TetrisHeader>
+    <TetrisHeader v-if="showHeader" />
     <v-main>
-      <router-view></router-view>
+      <router-view />
     </v-main>
   </v-app>
 </template>

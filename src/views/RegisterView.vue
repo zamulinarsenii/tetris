@@ -8,9 +8,9 @@
           </v-toolbar>
 
           <v-form
-            @submit.prevent="submitRegister"
             class="d-flex flex-column align-center"
             autocomplete="off"
+            @submit.prevent="submitRegister"
           >
             <v-card-text class="w-100">
               <v-text-field
@@ -18,7 +18,7 @@
                 label="Login"
                 :rules="loginRules"
                 required
-              ></v-text-field>
+              />
 
               <v-text-field
                 v-model="email"
@@ -26,7 +26,7 @@
                 type="email"
                 :rules="emailRules"
                 required
-              ></v-text-field>
+              />
 
               <v-text-field
                 v-model="password"
@@ -34,7 +34,7 @@
                 type="password"
                 :rules="passwordRules"
                 required
-              ></v-text-field>
+              />
 
               <v-text-field
                 v-model="confirmPassword"
@@ -42,16 +42,18 @@
                 type="password"
                 :rules="confirmPasswordRules"
                 required
-              ></v-text-field>
-              <p v-if="error" class="error-text">{{ error }}</p>
+              />
+              <p v-if="error" class="error-text">
+                {{ error }}
+              </p>
             </v-card-text>
 
-            <v-btn type="submit" class="gradient top-to-bottom w-50"
-              >Зарегистрироваться</v-btn
-            >
-            <router-link class="mt-5 mb-2 mr-3 align-self-end" to="/login"
-              >Есть аккаунт?</router-link
-            >
+            <v-btn type="submit" class="gradient top-to-bottom w-50">
+              Зарегистрироваться
+            </v-btn>
+            <router-link class="mt-5 mb-2 mr-3 align-self-end" to="/login">
+              Есть аккаунт?
+            </router-link>
           </v-form>
         </v-card>
       </v-col>
@@ -62,15 +64,16 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "@/js/useAuth.js";
-
+import { useRegisterApi } from "@/api/user.js";
 const router = useRouter();
-const { register, error } = useAuth();
 
 const login = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
+const error = ref("");
+const successMessage = ref("");
+const loading = ref(false);
 
 const loginRules = [
   (v) => !!v || "Login обязательно",
@@ -93,11 +96,24 @@ const confirmPasswordRules = computed(() => [
 ]);
 
 const submitRegister = async () => {
-  const ok = await register(login.value, email.value, password.value);
-  if (ok) {
-    // После успешной регистрации сразу переходим в дашборд
-    sessionStorage.setItem("tetrisUser", login.value);
-    router.push("/menu");
+  // Валидация форм
+  if (
+    !login.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value
+  ) {
+    error.value = "Все поля обязательны для заполнения";
+    return;
   }
+
+  if (password.value !== confirmPassword.value) {
+    error.value = "Пароли не совпадают";
+    return;
+  }
+  useRegisterApi(login.value, email.value, password.value);
+  setTimeout(() => {
+    router.push("/menu");
+  }, 1000);
 };
 </script>

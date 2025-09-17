@@ -8,6 +8,7 @@ import Tetris from "../views/TetrisView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import AboutUsView from "../views/AboutUsView.vue";
 import ControlsView from "../views/ControlsView.vue";
+import AdminView from "@/views/AdminView.vue";
 
 const routes = [
   {
@@ -44,6 +45,7 @@ const routes = [
     name: "tetris",
     component: Tetris,
   },
+
   {
     path: "/profile",
     name: "profile",
@@ -58,6 +60,11 @@ const routes = [
     path: "/controls",
     name: "controls",
     component: ControlsView,
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminView,
   },
 ];
 
