@@ -39,6 +39,11 @@ export const useDeleteFigures = async (id) => {
   }
 };
 
+export async function useUpdateFigures(id, pattern) {
+  await useDeleteFigures(id);
+  await usePostFigures(pattern);
+}
+
 export const usePostFigures = async (pattern) => {
   try {
     const response = await fetch(`${apiName}/figures`, {

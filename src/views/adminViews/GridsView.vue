@@ -8,6 +8,7 @@
     <v-btn @Click="showPopup = true">Создать стакан</v-btn>
     <CreateGridsPopup
       v-if="showPopup"
+      :grids="grids"
       @close="showPopup = false"
     ></CreateGridsPopup>
   </div>

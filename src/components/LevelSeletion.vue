@@ -1,61 +1,43 @@
 <template>
   <div class="container">
-    <h2>Управление уровнями</h2>
     <div v-if="levels.length > 0" class="container-figures">
       <LevelsEditor
-        v-for="(level, index) in levels"
+        v-for="level in levels"
         :key="level.id"
         :level="level"
-        :index="index"
-        @edit="openEditPopup"
+        :selection="true"
+        @click="() => selectLevel(level)"
       />
     </div>
     <div v-else>Уровни не найдены</div>
-    <v-btn @Click="showPopup = true">Создать уровень</v-btn>
   </div>
-  <CreateLevelsPopup
-    v-if="showPopup"
-    :levels="levels"
-    :level-to-edit="editingLevel"
-    @close="closePopup"
-    @save="onSave"
-  />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useGetLevels } from "@/api/levels.js";
-import CreateLevelsPopup from "@/components/CreateLevelsPopup.vue";
 import LevelsEditor from "@/components/LevelsEditor.vue";
 
 const levels = ref([]);
 
-const showPopup = ref(false);
-
 async function loadLevels() {
   try {
-    levels.value = await useGetLevels();
+    const data = await useGetLevels();
+    levels.value = data.map((level) => ({ ...level, selected: false }));
+    levels.value[0].selected = true;
+    sessionStorage.setItem("tetris-level", levels.value[0].id);
     console.log("Загруженные уровни:", levels.value);
   } catch (error) {
     console.error("Ошибка при загрузке уровней:", error);
   }
 }
 loadLevels();
-const editingLevel = ref(null);
-
-const openEditPopup = (level) => {
-  editingLevel.value = level;
-  showPopup.value = true;
-};
-
-const closePopup = () => {
-  showPopup.value = false;
-  editingLevel.value = null;
-};
-
-const onSave = async () => {
-  await loadLevels();
-  closePopup();
+const selectLevel = (clickedLevel) => {
+  levels.value = levels.value.map((level) => ({
+    ...level,
+    selected: level.id === clickedLevel.id,
+  }));
+  sessionStorage.setItem("tetris-level", clickedLevel.id);
 };
 </script>
 

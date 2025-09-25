@@ -8,30 +8,27 @@
 
       <!-- Управление размером -->
       <div class="grid-settings">
-        <label>
-          Колонки:
-          <input type="number" v-model.number="cols" min="1" max="16" />
-        </label>
-        <label>
-          Строки:
-          <input type="number" v-model.number="rows" min="1" max="16" />
-        </label>
-      </div>
-
-      <!-- Сетка -->
-      <div
-        class="grid-preview"
-        :style="{
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: `repeat(${rows}, 1fr)`,
-        }"
-      >
-        <div
-          v-for="(cell, index) in cells"
-          :key="index"
-          :class="['cell', { filled: cell }]"
-          @click="toggleCell(index)"
-        ></div>
+        <!-- Используем type="text" + inputmode numeric, maxlength работает -->
+        <v-text-field
+          type="text"
+          inputmode="numeric"
+          v-model="colsStr"
+          label="Колонки"
+          maxlength="2"
+          @update:modelValue="onColsInput"
+          @blur="onColsBlur"
+          required
+        />
+        <v-text-field
+          type="text"
+          inputmode="numeric"
+          v-model="rowsStr"
+          label="Строки"
+          maxlength="2"
+          @update:modelValue="onRowsInput"
+          @blur="onRowsBlur"
+          required
+        />
       </div>
 
       <!-- Кнопка сохранить -->
@@ -41,37 +38,62 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { usePostGrids } from "@/api/grids";
-
+const props = defineProps({
+  grids: {
+    type: Array,
+    required: true,
+  },
+});
 const emit = defineEmits(["close", "save"]);
 
-// Начальные размеры
-const cols = ref(10);
-const rows = ref(10);
+// "рабочие" числовые значения, от них зависит сетка
+const colsNum = ref(10);
+const rowsNum = ref(10);
 
-// Массив клеток
-const cells = ref(Array(cols.value * rows.value).fill(0));
+// строковые привязки для полей ввода (позволяют вводить символы по шагам)
+const colsStr = ref(String(colsNum.value));
+const rowsStr = ref(String(rowsNum.value));
 
-// При изменении размеров сетки пересоздаём массив
-watch([cols, rows], () => {
-  const newCells = Array(cols.value * rows.value).fill(0);
-  // Старая сетка не сохраняется, если нужны старые значения — нужно копировать
-  if (cols.value > 50) cols.value = 50;
-  if (rows.value > 50) rows.value = 50;
-  if (cols.value < 10) cols.value = 10;
-  if (rows.value < 10) rows.value = 10;
-  cells.value = newCells;
-});
-
-// Клик по клетке
-function toggleCell(index) {
-  cells.value[index] = cells.value[index] ? 0 : 1;
+// sanitize при вводе: оставить только цифры и не больше 2 символов
+function onColsInput(val) {
+  // val может быть строкой
+  colsStr.value = String(val).replace(/\D/g, "").slice(0, 2);
+}
+function onRowsInput(val) {
+  rowsStr.value = String(val).replace(/\D/g, "").slice(0, 2);
 }
 
-// Сохранение сетки
+// при уходе из поля приводим к числу и применяем границы 10..50
+function onColsBlur() {
+  let n = parseInt(colsStr.value, 10);
+  if (Number.isNaN(n)) n = 10;
+  if (n < 10) n = 10;
+  if (n > 50) n = 50;
+  colsNum.value = n;
+  colsStr.value = String(n);
+}
+function onRowsBlur() {
+  let n = parseInt(rowsStr.value, 10);
+  if (Number.isNaN(n)) n = 10;
+  if (n < 10) n = 10;
+  if (n > 50) n = 50;
+  rowsNum.value = n;
+  rowsStr.value = String(n);
+}
+
+// сохранение: используем colsNum / rowsNum (числа)
 function saveGrid() {
-  usePostGrids(cols.value, rows.value);
+  const exists = props.grids.some((g) => {
+    return g.width === colsNum.value && g.height === rowsNum.value;
+  });
+
+  if (exists) {
+    alert("Такой стакан уже существует!");
+    return;
+  }
+  usePostGrids(colsNum.value, rowsNum.value);
   emit("close");
   window.location.reload();
 }
@@ -98,6 +120,7 @@ function closePopup() {
 .create-grid__container {
   height: fit-content;
   max-height: 90%;
+  min-width: 300px;
   position: relative;
   background-color: white;
   display: flex;
@@ -123,8 +146,8 @@ function closePopup() {
 
 .grid-settings {
   display: flex;
-  gap: 20px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  margin: 10px 0px;
 }
 
 .grid-settings label {

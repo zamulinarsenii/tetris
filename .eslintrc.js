@@ -19,4 +19,8 @@ module.exports = {
     defineExpose: "readonly",
     withDefaults: "readonly",
   },
+  rules: {
+    "no-unused-vars": "off", // отключаем правило js
+    "vue/no-unused-vars": "off", // отключаем правило vue
+  },
 };

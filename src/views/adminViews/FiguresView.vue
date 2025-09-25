@@ -12,6 +12,7 @@
     <v-btn @Click="showPopup = true">Создать фигуру</v-btn>
     <CreateFiguresPopup
       v-if="showPopup"
+      :figures="figures"
       @close="showPopup = false"
     ></CreateFiguresPopup>
   </div>
@@ -50,7 +51,7 @@ loadFigures();
 }
 .container-figures {
   display: flex;
-  padding: 0 20px;
+  padding: 12px 20px;
   width: 100%;
   overflow-x: scroll;
   gap: 20px;

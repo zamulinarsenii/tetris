@@ -14,9 +14,7 @@
     <v-btn text to="/controls" class="text-h5 font-weight-bold">
       УПРАВЛЕНИЕ
     </v-btn>
-    <v-btn text to="/leaderboard" class="text-h5 font-weight-bold">
-      ТАБЛИЦА ЛИДЕРОВ
-    </v-btn>
+    <v-btn text to="/history" class="text-h5 font-weight-bold"> ИСТОРИЯ </v-btn>
     <v-btn text to="/aboutus" class="text-h5 font-weight-bold">
       ОБ АВТОРАХ
     </v-btn>

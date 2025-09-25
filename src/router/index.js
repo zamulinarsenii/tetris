@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
-import Dashboard from "../views/DashboardView.vue";
+import History from "../views/HistoryView.vue";
 import Main from "../views/MainView.vue";
 import NewGame from "../views/NewGameView.vue";
 import Tetris from "../views/TetrisView.vue";
@@ -26,9 +26,9 @@ const routes = [
     component: LoginView,
   },
   {
-    path: "/dashboard",
-    name: "dashboard",
-    component: Dashboard,
+    path: "/history",
+    name: "history",
+    component: History,
   },
   {
     path: "/menu",

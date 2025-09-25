@@ -1,15 +1,27 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 const props = defineProps({
   figure: {
     type: Object,
     required: true,
   },
+  edit: { type: Boolean, default: false },
+  added: { type: Boolean, default: true },
 });
 
 // Размер сетки
 const COLS = 5;
 const ROWS = 5;
+
+const defaultPatterns = [
+  "1111000000000000000000000",
+  "1110010000000000000000000",
+  "0100011100000000000000000",
+  "1100011000000000000000000",
+  "1110000100000000000000000",
+  "0110011000000000000000000",
+  "1100001100000000000000000",
+];
 
 // Массива для клеток (числа 0/1)
 const cells = computed(() => {
@@ -18,7 +30,17 @@ const cells = computed(() => {
   const normalized = (raw + "0".repeat(COLS * ROWS)).slice(0, COLS * ROWS);
   return normalized.split("").map((ch) => (ch === "1" ? 1 : 0));
 });
-const add = ref(false);
+const add = ref(props.added);
+onMounted(() => {
+  if (
+    defaultPatterns.some((pattern) => pattern === props.figure.pattern) &&
+    !props.edit
+  ) {
+    emit("add", props.figure.id);
+    add.value = true;
+  }
+});
+
 const emit = defineEmits(["add", "remove"]);
 const addFigure = () => {
   if (!add.value) {

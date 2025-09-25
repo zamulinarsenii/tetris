@@ -26,24 +26,70 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { usePostFigures } from "@/api/figures";
+import { ref, watch } from "vue";
+import { usePostFigures, useUpdateFigures } from "@/api/figures";
+import { Figure } from "@/js/classFigures";
+
+const props = defineProps({
+  figures: {
+    type: Array,
+    required: true,
+  },
+  figure: {
+    type: Object,
+    default: null,
+  },
+});
+
 const COLS = 5;
 const ROWS = 5;
 
 const emit = defineEmits(["close", "save"]);
 
-const cells = ref(Array(COLS * ROWS).fill(0)); // массив 25 клеток
+const cells = ref(Array(COLS * ROWS).fill(0));
+
+// если редактируем фигуру — заполняем клетки
+watch(
+  () => props.figure,
+  (fig) => {
+    if (fig?.pattern) {
+      const raw = fig.pattern.padEnd(COLS * ROWS, "0");
+      cells.value = raw.split("").map((ch) => (ch === "1" ? 1 : 0));
+    }
+  },
+  { immediate: true }
+);
 
 function toggleCell(idx) {
   cells.value[idx] = cells.value[idx] === 0 ? 1 : 0;
 }
 
-function saveFigure() {
-  // создаём объект фигуры
-  const pattern = cells.value.join(""); // "0100010..."
-  usePostFigures(pattern);
-  emit("close"); // закрываем попап
+async function saveFigure() {
+  const pattern = cells.value.join("");
+  const newFigure = new Figure(pattern);
+  const exists = props.figures.some((f) => {
+    // если редактируемая фигура и id совпадает → пропускаем
+    if (props.figure && f.id === props.figure.id) return false;
+
+    const fig = new Figure(f.pattern);
+    return fig.equals(newFigure);
+  });
+
+  if (exists) {
+    alert("Такая фигура уже существует!");
+    return;
+  }
+
+  if (!props.figure) {
+    // Создание новой
+    await usePostFigures(pattern);
+  } else {
+    // Редактирование
+    await useUpdateFigures(props.figure.id, pattern);
+  }
+
+  emit("save", { pattern });
+  emit("close");
   window.location.reload();
 }
 

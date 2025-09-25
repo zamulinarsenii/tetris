@@ -1,8 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useDeleteFigures } from "@/api/figures.js";
-import CreateFiguresPopup from "@/components/CreateFiguresPopup.vue";
-
+import { computed } from "vue";
 const props = defineProps({
   figure: {
     type: Object,
@@ -10,63 +7,23 @@ const props = defineProps({
   },
 });
 
-const defaultPatterns = [
-  "1111000000000000000000000",
-  "1110010000000000000000000",
-  "0100011100000000000000000",
-  "1100011000000000000000000",
-  "1110000100000000000000000",
-  "0110011000000000000000000",
-  "1100001100000000000000000",
-];
-const showEdit = ref(false);
-
+// Размер сетки
 const COLS = 5;
 const ROWS = 5;
 
-const isDefault = computed(() => {
-  return defaultPatterns.some((pattern) => pattern === props.figure.pattern);
-});
-
+// Массива для клеток (числа 0/1)
 const cells = computed(() => {
   const raw = String(props.figure?.pattern ?? "");
+  // Обрезаем до 25 символов или дополняем нулями
   const normalized = (raw + "0".repeat(COLS * ROWS)).slice(0, COLS * ROWS);
   return normalized.split("").map((ch) => (ch === "1" ? 1 : 0));
 });
-
-const deleteFigure = async () => {
-  const confirmed = window.confirm(
-    "Вы уверены, что хотите удалить эту фигуру?"
-  );
-  if (!confirmed) return; // если отмена — выходим
-  try {
-    await useDeleteFigures(props.figure.id);
-    alert("Фигура успешно удалена");
-    window.location.reload();
-  } catch (error) {
-    console.error("Ошибка при удалении фигуры:", error);
-    alert("Не удалось удалить фигуру");
-  }
-};
 </script>
 
 <template>
   <div class="figure-editor">
-    <div v-if="!isDefault" class="actions">
-      <img
-        :src="require('@/assets/edit.svg')"
-        :width="18"
-        alt="Изменить"
-        @click="showEdit = true"
-      />
-      <img
-        :src="require('@/assets/trash.svg')"
-        alt="Удалить"
-        @click="deleteFigure"
-      />
-    </div>
-
     <div class="preview-container">
+      <!-- Превью сетки -->
       <div
         class="grid-preview"
         :style="{
@@ -79,17 +36,12 @@ const deleteFigure = async () => {
           v-for="(cell, idx) in cells"
           :key="idx"
           :class="['cell', { filled: cell === 1 }]"
+          :title="`#${idx} — ${cell === 1 ? '1' : '0'}`"
+          role="img"
+          :aria-label="cell === 1 ? 'filled' : 'empty'"
         />
       </div>
     </div>
-
-    <!-- Попап редактирования -->
-    <CreateFiguresPopup
-      v-if="showEdit"
-      :figures="[]"
-      :figure="figure"
-      @close="showEdit = false"
-    />
   </div>
 </template>
 
@@ -97,18 +49,12 @@ const deleteFigure = async () => {
 .figure-editor {
   display: flex;
   flex-direction: column;
-  align-items: end;
-  justify-content: end;
   gap: 5px;
 }
 .figure-editor img {
   cursor: pointer;
 }
-.actions {
-  display: flex;
-  gap: 12px;
-  margin-right: 5px;
-}
+
 .preview-container {
   display: flex;
 

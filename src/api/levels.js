@@ -1,4 +1,5 @@
 import { apiName } from "@/api/apiName.js";
+import { useSaveFigures } from "@/api/level-use-figures.js";
 
 export const useGetLevels = async () => {
   try {
@@ -7,14 +8,10 @@ export const useGetLevels = async () => {
       headers: { "Content-Type": "application/json" },
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch figures");
-    }
-
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Fetch figures error:", error);
+    console.error("Fetch levles error:", error);
     throw error;
   }
 };
@@ -32,7 +29,7 @@ export const useDeleteLevels = async (id) => {
       throw new Error("Failed to fetch figures");
     }
   } catch (error) {
-    console.error("Fetch figures error:", error);
+    console.error("Fetch levles error:", error);
     throw error;
   }
 };
@@ -48,7 +45,7 @@ export const usePostLevels = async (
 ) => {
   try {
     const obj = JSON.stringify({
-      grid: grid,
+      gridId: grid,
       speed: speed,
       pointsCoefficient: pointsCoefficient,
       pointsLimit: pointsLimit,
@@ -65,12 +62,55 @@ export const usePostLevels = async (
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch figures");
+      throw new Error("Failed to fetch levles");
     }
     const data = await response.json();
-    console.log(data);
+    console.log("Сохраненный уровень", data);
+
+    // Сохраняю фигуры уровня
+    useSaveFigures(data.id, figuresId);
   } catch (error) {
-    console.error("Fetch figures error:", error);
+    console.error("Fetch levles error:", error);
+    throw error;
+  }
+};
+
+export const useUpdateLevel = async (
+  id,
+  grid,
+  speed,
+  pointsCoefficient,
+  pointsLimit,
+  shouldBeGrid,
+  shouldBePreview,
+  figuresId
+) => {
+  await useDeleteLevels(id);
+
+  usePostLevels(
+    grid,
+    speed,
+    pointsCoefficient,
+    pointsLimit,
+    shouldBeGrid,
+    shouldBePreview,
+    figuresId
+  );
+};
+
+export const useGetLevelById = async (id) => {
+  try {
+    const response = await fetch(`${apiName}/levels/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Fetch levles error:", error);
     throw error;
   }
 };
