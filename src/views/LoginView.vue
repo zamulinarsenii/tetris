@@ -68,14 +68,14 @@ const passwordRules = [
 const submitLogin = async () => {
   const res = await useLoginApi(login.value, password.value);
   console.log("Ответ", res);
-  if (res) {
+  if (res.ok) {
     // Очистим поля и уйдем на дашборд
     sessionStorage.removeItem("tetrisUser");
     sessionStorage.setItem("tetrisUser", login.value);
-    sessionStorage.setItem("tetrisUserId", res.id);
+    sessionStorage.setItem("tetrisUserId", res.data.id);
     router.push("/menu");
   } else {
-    error.value = "Не верный логин или пароль";
+    error.value = res.data;
   }
 };
 </script>

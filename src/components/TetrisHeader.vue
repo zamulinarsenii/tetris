@@ -24,22 +24,28 @@
 
     <v-spacer />
 
-    <div
-      class="d-flex align-center user-info ga-4"
-      style="text-decoration: none"
-    >
-      <v-avatar size="30" class="gradient">
-        {{ initials }}
-      </v-avatar>
+    <div class="d-flex align-center user-info" style="text-decoration: none">
       <span class="user-name mr-4">{{ currentUser }}</span>
+      <img
+        class="cursor-pointer"
+        :src="require('@/assets/exit.svg')"
+        :width="30"
+        alt="Выход"
+        @click="exit"
+      />
     </div>
   </v-app-bar>
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
 const currentUser = sessionStorage.getItem("tetrisUser");
 const isAdmin = () => {
   return currentUser === "admin";
+};
+const exit = () => {
+  router.push("/login");
 };
 </script>
 
