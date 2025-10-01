@@ -24,13 +24,16 @@
     <div class="d-flex align-center flex-column stats text-h6">
       <span> Счёт: </span>
       <span>{{ score }}</span>
-      <div class="preview-container mt-4">
+      <div
+        class="preview-container mt-4"
+        :class="shouldBePreview ? '' : 'd-none'"
+      >
         <canvas ref="previewCanvas" width="150" height="150" />
         <div
           class="grid-preview"
           :width="grid[0]"
           :height="grid[1]"
-          v-if="shouldBePreview"
+          v-if="shouldBeGrid"
         >
           <div v-for="n in 25" :key="n" :width="cellSize" :height="cellSize" />
         </div>
