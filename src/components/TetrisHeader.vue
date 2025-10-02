@@ -15,8 +15,8 @@
       УПРАВЛЕНИЕ
     </v-btn>
     <v-btn text to="/history" class="text-h5 font-weight-bold"> ИСТОРИЯ </v-btn>
-    <v-btn text to="/aboutus" class="text-h5 font-weight-bold">
-      ОБ АВТОРАХ
+    <v-btn text to="/aboutsystem" class="text-h5 font-weight-bold">
+      О СИСТЕМЕ
     </v-btn>
     <v-btn v-if="isAdmin()" text to="/admin" class="text-h5 font-weight-bold">
       admin

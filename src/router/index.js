@@ -9,6 +9,7 @@ import ProfileView from "../views/ProfileView.vue";
 import AboutUsView from "../views/AboutUsView.vue";
 import ControlsView from "../views/ControlsView.vue";
 import AdminView from "@/views/AdminView.vue";
+import AboutSystem from "@/views/AboutSystem.vue";
 
 const routes = [
   {
@@ -55,6 +56,11 @@ const routes = [
     path: "/aboutus",
     name: "aboutus",
     component: AboutUsView,
+  },
+  {
+    path: "/aboutsystem",
+    name: "aboutsystem",
+    component: AboutSystem,
   },
   {
     path: "/controls",

@@ -16,9 +16,6 @@
           <span>быстрое падение</span>
         </div>
       </v-card-text>
-      <v-card-actions>
-        <v-btn text to="/menu"> На главную </v-btn>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
